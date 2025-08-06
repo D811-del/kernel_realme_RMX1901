@@ -3,7 +3,7 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       TELEGRAM_TO: "${{ secrets.TELEGRAM_TO }}"
       TELEGRAM_TOKEN: "${{ secrets.TELEGRAM_TOKEN }}"
@@ -15,7 +15,7 @@ jobs:
       KERNEL_CMDLINE: "ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- O=out LLVM_IAS=1"
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: 'true'
         fetch-depth: 0
@@ -31,14 +31,11 @@ jobs:
         sudo apt install gcc-arm-linux-gnueabi -y
         sudo apt install binutils make python3 libssl-dev build-essential bc  bison flex zip unzip libssl-dev ca-certificates xz-utils mkbootimg cpio device-tree-compiler git git-lfs -y
         git clone --depth=1 https://github.com/kdrag0n/proton-clang.git clang
-        git clone https://github.com/H1mJT/AnyKernel3 -b master --depth=1
+        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5        git clone https://github.com/H1mJT/AnyKernel3 -b master --depth=1
         rm -rf AnyKernel3/.git
         rm -rf AnyKernel3/.github
         git submodule sync
         git submodule update --init --recursive
-        cd $GITHUB_WORKSPACE/KernelSU
-        git checkout main
-        git pull
         export VERSION=$(git rev-list --count HEAD)
         echo "VER=$(($VERSION + 10200))" >> $GITHUB_OUTPUT
         cd -
