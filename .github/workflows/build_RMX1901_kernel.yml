@@ -32,16 +32,18 @@ jobs:
         sudo apt install binutils make python3 libssl-dev build-essential bc  bison flex zip unzip libssl-dev ca-certificates xz-utils mkbootimg cpio device-tree-compiler git git-lfs -y
         git clone --depth=1 https://github.com/kdrag0n/proton-clang.git clang
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5        git clone https://github.com/H1mJT/AnyKernel3 -b master --depth=1
+        git clone https://github.com/H1mJT/AnyKernel3 -b master --depth=1
         rm -rf AnyKernel3/.git
         rm -rf AnyKernel3/.github
         git submodule sync
         git submodule update --init --recursive
+        original_dir=$(pwd)
         cd $GITHUB_WORKSPACE/KernelSU
         git fetch origin --tags
         git checkout v0.9.5
         export VERSION=$(git rev-list --count v0.9.5)
         echo "VER=$(($VERSION + 10200))" >> $GITHUB_OUTPUT
-        cd -   
+        cd "$original_dir"
         
     - name: GetTime
       id: get_time
